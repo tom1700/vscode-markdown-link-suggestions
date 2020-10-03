@@ -21,7 +21,13 @@ export default class MarkDownLinkDocumentLinkProvider implements DocumentLinkPro
         continue;
       }
 
-      links.push(new DocumentLink(symbol.children[0].selectionRange, Uri.file(resolvePath(document, path))));
+      let verbatimPath = path;
+      // Remove leading slash which `Uri.parse` puts there but isn't in the MarkDown
+      if (path.startsWith('/')) {
+        verbatimPath = verbatimPath.slice(1);
+      }
+
+      links.push(new DocumentLink(symbol.children[0].selectionRange, Uri.file(resolvePath(document, verbatimPath))));
     }
 
     return links;
